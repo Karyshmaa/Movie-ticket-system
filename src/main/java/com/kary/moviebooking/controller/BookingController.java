@@ -1,11 +1,11 @@
 package com.kary.moviebooking.controller;
 
 import com.kary.moviebooking.entity.Booking;
+import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.repository.BookingRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/bookings")
@@ -27,7 +27,7 @@ public class BookingController {
     @GetMapping("/{id}")
     public Booking getBookingById(@PathVariable Long id) {
         return bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + id));
     }
 
     // Get all bookings

@@ -1,6 +1,7 @@
 package com.kary.moviebooking.controller;
 
 import com.kary.moviebooking.entity.User;
+import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
     }
 
     //Get all users

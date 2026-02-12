@@ -1,6 +1,7 @@
 package com.kary.moviebooking.controller;
 
 import com.kary.moviebooking.entity.Movie;
+import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.repository.MovieRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class MovieController {
     // Create a movie
     @PostMapping
     public Movie createMovie(@RequestBody Movie movie) {
-        movie.setCreatedAt(LocalDateTime.now()); // if your entity has this field
+        movie.setCreatedAt(LocalDateTime.now()); // only if your entity has this field
         return movieRepository.save(movie);
     }
 
@@ -28,7 +29,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public Movie getMovieById(@PathVariable Long id) {
         return movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
     }
 
     // Get all movies
