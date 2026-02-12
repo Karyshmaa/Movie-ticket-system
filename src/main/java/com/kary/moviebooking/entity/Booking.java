@@ -17,9 +17,6 @@ public class Booking {
     @ManyToOne
     private Show show;
 
-    @ManyToOne
-    private Seat seat;
-
     private LocalDateTime bookedAt;
 
     // Getters & Setters
@@ -31,9 +28,6 @@ public class Booking {
 
     public Show getShow() { return show; }
     public void setShow(Show show) { this.show = show; }
-
-    public Seat getSeat() { return seat; }
-    public void setSeat(Seat seat) { this.seat = seat; }
 
     public LocalDateTime getBookedAt() { return bookedAt; }
     public void setBookedAt(LocalDateTime bookedAt) { this.bookedAt = bookedAt; }

@@ -14,9 +14,10 @@ public class Show {
     @ManyToOne
     private Movie movie;
 
-    @ManyToOne
-    private Theater theater;
+    @ManyToOne(optional = false)
+    private Screen screen;
 
+    @Column(nullable = false)
     private LocalDateTime showTime;
 
     // Getters & Setters
@@ -26,8 +27,8 @@ public class Show {
     public Movie getMovie() { return movie; }
     public void setMovie(Movie movie) { this.movie = movie; }
 
-    public Theater getTheater() { return theater; }
-    public void setTheater(Theater theater) { this.theater = theater; }
+    public Screen getScreen() { return screen; }
+    public void setScreen(Screen screen) { this.screen = screen; }
 
     public LocalDateTime getShowTime() { return showTime; }
     public void setShowTime(LocalDateTime showTime) { this.showTime = showTime; }
