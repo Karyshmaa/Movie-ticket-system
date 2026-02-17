@@ -1,5 +1,6 @@
 package com.kary.moviebooking.entity;
 
+import com.kary.moviebooking.enums.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    private String username;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -27,6 +30,9 @@ public class User {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(nullable = false)
     private boolean active = true;
@@ -54,4 +60,18 @@ public class User {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public Role getRole() {
+        return role;
+    }
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
