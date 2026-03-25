@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
             name = "booking_seats",
             uniqueConstraints = {
                     @UniqueConstraint(columnNames = {"show_id", "seat_id"})
-            }
+            } //to prevent double booking
     )
     public class BookingSeat {
 

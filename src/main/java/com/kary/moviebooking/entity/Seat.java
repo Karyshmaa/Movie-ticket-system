@@ -29,10 +29,6 @@ public class Seat {
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private SeatStatus status;
-
     public Long getId() {
         return id;
     }
@@ -64,11 +60,5 @@ public class Seat {
         this.screen = screen;
     }
 
-    public SeatStatus getStatus() {
-        return status;
-    }
 
-    public void setStatus(SeatStatus status) {
-        this.status = status;
-    }
 }

@@ -58,26 +58,20 @@ public class Movie {
     public void setAbout(String about) { this.about = about; }
 
     public String getDirector() {
-        return director;
-    }
+        return director; }
 
     public void setDirector(String director) {
-        this.director = director;
-    }
+        this.director = director; }
 
     public int getReleaseYear() {
-        return releaseYear;
-    }
+        return releaseYear; }
 
     public void setReleaseYear(int releaseYear) {
-        this.releaseYear = releaseYear;
-    }
+        this.releaseYear = releaseYear; }
 
     public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+        return createdAt; }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+        this.createdAt = createdAt; }
 }
