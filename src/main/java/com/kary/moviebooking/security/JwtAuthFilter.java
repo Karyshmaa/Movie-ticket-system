@@ -1,11 +1,11 @@
 package com.kary.moviebooking.security;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         private final JwtUtil jwtUtil;
         private final UserDetailsService userDetailsService;
 
-        public JwtAuthFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        public JwtAuthFilter(JwtUtil jwtUtil,@Lazy UserDetailsService userDetailsService) {
             this.jwtUtil = jwtUtil;
             this.userDetailsService = userDetailsService;
         }
@@ -38,9 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter{
             String token = null;
             String username = null;
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7);
-                username = jwtUtil.extractUsername(token);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -66,4 +66,4 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 
             filterChain.doFilter(request, response);
         }
-    }
+}
