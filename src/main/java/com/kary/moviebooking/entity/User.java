@@ -20,6 +20,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    private boolean enabled;
+
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -43,6 +45,15 @@ public class User {
     }
 
     // Getters & Setters
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
