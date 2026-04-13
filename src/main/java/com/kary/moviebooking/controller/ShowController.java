@@ -7,6 +7,7 @@ import com.kary.moviebooking.repository.ShowRepository;
 import com.kary.moviebooking.repository.MovieRepository;
 import com.kary.moviebooking.repository.TheaterRepository;
 import com.kary.moviebooking.exception.ResourceNotFoundException;
+import com.kary.moviebooking.service.Interface.ShowService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +16,13 @@ import java.util.List;
 @RequestMapping("/shows")
 public class ShowController {
 
+    private final ShowService showService;
     private final ShowRepository showRepository;
     private final MovieRepository movieRepository;
     private final TheaterRepository theaterRepository;
 
-    public ShowController(ShowRepository showRepository, MovieRepository movieRepository, TheaterRepository theaterRepository) {
+    public ShowController(ShowService showService,ShowRepository showRepository, MovieRepository movieRepository, TheaterRepository theaterRepository) {
+        this.showService = showService;
         this.showRepository = showRepository;
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
@@ -38,7 +41,7 @@ public class ShowController {
         show.setMovie(movie);
         show.setTheater(theater);
 
-        return showRepository.save(show);
+        return showService.createShow(show);
     }
 
     // Get show by ID

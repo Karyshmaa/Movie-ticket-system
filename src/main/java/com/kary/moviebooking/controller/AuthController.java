@@ -1,5 +1,6 @@
 package com.kary.moviebooking.controller;
 
+import com.kary.moviebooking.dto.SignupRequestDTO;
 import com.kary.moviebooking.enums.Role;
 import com.kary.moviebooking.entity.User;
 import com.kary.moviebooking.enums.Role;
@@ -31,9 +32,13 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public String signup() {
-        authservice.signup();
-        return "Signup successful. Check email.";
+    public String signup(@RequestBody SignupRequestDTO request) {
+      return authservice.signup(request);
+    }
+
+    @GetMapping("/verify")
+    public String verify(@RequestParam String token) {
+        return authservice.verify(token);
     }
 
     @PostMapping("/login")

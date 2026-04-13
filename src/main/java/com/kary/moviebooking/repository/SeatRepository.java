@@ -16,4 +16,5 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> findAllByIdWithLock(@Param("seatIds") List<Long> seatIds);
     List<Seat> findByScreen_Id(Long screenId);
 
+    List<Seat> findAllByScreenId(Long screenId);
 }

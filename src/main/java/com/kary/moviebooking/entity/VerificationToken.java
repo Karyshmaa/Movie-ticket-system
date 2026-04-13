@@ -20,8 +20,6 @@ public class VerificationToken {
 
     private LocalDateTime expiryDate;
 
-    // ✅ ADD THESE
-
     public void setUser(User user) {
         this.user = user;
     }
