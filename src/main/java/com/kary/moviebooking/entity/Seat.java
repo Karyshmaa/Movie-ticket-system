@@ -1,5 +1,8 @@
 package com.kary.moviebooking.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kary.moviebooking.enums.SeatStatus;
 import com.kary.moviebooking.enums.SeatType;
 import jakarta.persistence.*;
@@ -27,6 +30,7 @@ public class Seat {
 
     @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
+    @JsonIgnore
     private Screen screen;
 
     public Long getId() {

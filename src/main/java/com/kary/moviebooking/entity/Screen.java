@@ -1,5 +1,7 @@
 package com.kary.moviebooking.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -20,9 +22,11 @@ public class Screen {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "theater_id")
+    @JsonIgnore
     private Theater theater;
 
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
+    @JsonIgnore
     private java.util.List<Seat> seats;
 
     // getters & setters

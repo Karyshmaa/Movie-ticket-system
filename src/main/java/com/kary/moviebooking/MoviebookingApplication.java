@@ -12,3 +12,9 @@ public class MoviebookingApplication {
 
 	}
 }
+//Bidirectional relationship + infinite serialization
+//
+//There are cleaner solutions like:
+//
+//@JsonManagedReference / @JsonBackReference
+//DTOs (best practice)
