@@ -2,9 +2,11 @@ package com.kary.moviebooking.entity;
 
 import com.kary.moviebooking.enums.SeatStatus;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 public class ShowSeat {
 
@@ -25,52 +27,8 @@ public class ShowSeat {
 
         private Long lockedByUserId;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Show getShow() {
-        return show;
-    }
-
-    public void setShow(Show show) {
-        this.show = show;
-    }
-
-    public Seat getSeat() {
-        return seat;
-    }
-
-    public void setSeat(Seat seat) {
-        this.seat = seat;
-    }
-
-    public SeatStatus getSeatStatus() {
-        return seatStatus;
-    }
-
-    public void setSeatStatus(SeatStatus seatStatus) {
-        this.seatStatus = seatStatus;
-    }
-
-    public LocalDateTime getLockedAt() {
-        return lockedAt;
-    }
-
-    public void setLockedAt(LocalDateTime lockedAt) {
-        this.lockedAt = lockedAt;
-    }
-
-    public Long getLockedByUserId() {
-        return lockedByUserId;
-    }
-
-    public void setLockedByUserId(Long lockedByUserId) {
-        this.lockedByUserId = lockedByUserId;
-    }
+       @ManyToOne
+       @JoinColumn(name = "booking_id")
+       private Booking booking;
 }
 

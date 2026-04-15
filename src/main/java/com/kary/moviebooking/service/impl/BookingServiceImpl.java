@@ -19,36 +19,50 @@ public class BookingServiceImpl implements BookingService {
     private final BookingSeatRepository bookingSeatRepository;
     private final ShowRepository showRepository;
     private final ShowSeatRepository showSeatRepository;
+    private final UserRepository userRepository;
 
     public BookingServiceImpl(BookingRepository bookingRepository,
                               BookingSeatRepository bookingSeatRepository,
                               ShowRepository showRepository,
-                              ShowSeatRepository showSeatRepository) {
+                              ShowSeatRepository showSeatRepository,
+                              UserRepository userRepository) {
         this.bookingRepository = bookingRepository;
         this.bookingSeatRepository = bookingSeatRepository;
         this.showRepository = showRepository;
         this.showSeatRepository = showSeatRepository;
+        this.userRepository = userRepository;
     }
 
-    @Override
-    public Booking bookSeats(Long showId, List<Long> seatIds, User user) {
 
-        // 1. Get show
-        Show show = showRepository.findById(showId)
-                .orElseThrow(() -> new RuntimeException("Show not found"));
+    public Booking createBooking(Long userId, Long showId) {
 
-        // 2. Lock seats
-        List<ShowSeat> showSeats = showSeatRepository.findWithLock(showId, seatIds);
+        // 1. Fetch locked seats for this user
+        List<ShowSeat> seats = showSeatRepository.findLockedSeatsByUser(showId, userId);
 
-        // 3. Check + mark booked
-        for (ShowSeat ss : showSeats) {
-            if (ss.getSeatStatus() != SeatStatus.AVAILABLE) {
-                throw new RuntimeException("Seat not available");
-            }
-            ss.setSeatStatus(SeatStatus.BOOKED);
+        if (seats.isEmpty()) {
+            throw new RuntimeException("No seats locked for this user");
         }
 
-        showSeatRepository.saveAll(showSeats);
+        // 2. Validate seats
+        for (ShowSeat seat : seats) {
+
+            if (seat.getSeatStatus() != SeatStatus.LOCKED) {
+                throw new RuntimeException("Seat is not locked");
+            }
+
+            if (seat.getLockedAt() == null ||
+                    seat.getLockedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
+
+                throw new RuntimeException("Seat lock expired");
+            }
+        }
+
+        // 3. Get user & show
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Show show = showRepository.findById(showId)
+                .orElseThrow(() -> new RuntimeException("Show not found"));
 
         // 4. Create booking
         Booking booking = new Booking();
@@ -58,15 +72,20 @@ public class BookingServiceImpl implements BookingService {
 
         booking = bookingRepository.save(booking);
 
-        // 5. Map seats
-        for (ShowSeat ss : showSeats) {
+        // 5. Create BookingSeat + mark BOOKED
+        for (ShowSeat seat : seats) {
+
+            seat.setSeatStatus(SeatStatus.BOOKED);
+
             BookingSeat bs = new BookingSeat();
             bs.setBooking(booking);
-            bs.setSeat(ss.getSeat());
-            bs.setShow(show);
+            bs.setShowSeat(seat);   // ✅ IMPORTANT (new design)
+            bs.setBookedAt(LocalDateTime.now());
 
             bookingSeatRepository.save(bs);
         }
+
+        showSeatRepository.saveAll(seats);
 
         return booking;
     }

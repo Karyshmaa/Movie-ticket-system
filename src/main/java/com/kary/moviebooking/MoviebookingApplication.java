@@ -2,14 +2,14 @@ package com.kary.moviebooking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @SpringBootApplication
 public class MoviebookingApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(MoviebookingApplication.class, args);
-
 	}
 }
 //Bidirectional relationship + infinite serialization
@@ -18,3 +18,4 @@ public class MoviebookingApplication {
 //
 //@JsonManagedReference / @JsonBackReference
 //DTOs (best practice)
+//“Because bidirectional relationship caused Jackson to recursively serialize objects again and again”

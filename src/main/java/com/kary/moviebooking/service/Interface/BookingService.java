@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BookingService {
 
-    Booking bookSeats(Long showId, List<Long> seatIds, User user);
+    Booking createBooking(Long userId, Long showId);
 
     Optional<Booking> getBookingById(Long id);
 

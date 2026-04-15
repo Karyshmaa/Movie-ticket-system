@@ -1,8 +1,12 @@
 package com.kary.moviebooking.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -19,16 +23,6 @@ public class Booking {
 
     private LocalDateTime bookedAt;
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public Show getShow() { return show; }
-    public void setShow(Show show) { this.show = show; }
-
-    public LocalDateTime getBookedAt() { return bookedAt; }
-    public void setBookedAt(LocalDateTime bookedAt) { this.bookedAt = bookedAt; }
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private List<BookingSeat> bookingSeats;
 }

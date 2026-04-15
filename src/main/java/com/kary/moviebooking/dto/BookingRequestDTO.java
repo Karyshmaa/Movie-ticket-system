@@ -15,9 +15,5 @@ public class BookingRequestDTO {
 
     @NotNull
     private Long userId;
-
-    @NotEmpty
-    private List<Long> seatIds;
-
 }
 

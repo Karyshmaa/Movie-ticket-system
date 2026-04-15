@@ -18,7 +18,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    public BookingController(BookingServiceImpl bookingService) {
+    public BookingController(BookingService   bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -26,13 +26,9 @@ public class BookingController {
     @PostMapping
     public BookingResponseDTO bookSeats(@Valid @RequestBody BookingRequestDTO request) {
 
-        User user = new User();
-        user.setId(request.getUserId());
-
-        Booking booking = bookingService.bookSeats(
-                request.getShowId(),
-                request.getSeatIds(),
-                user
+        Booking booking = bookingService.createBooking(
+                request.getUserId(),
+                request.getShowId()
         );
 
         // convert to response DTO
