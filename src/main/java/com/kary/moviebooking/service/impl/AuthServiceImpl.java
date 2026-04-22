@@ -40,11 +40,11 @@ public class AuthServiceImpl implements Authservice {
     public String signup(SignupRequestDTO request) {
 
         User user = new User();
+        user.setName(request.getName()); // make sure DTO has this
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEnabled(true); // skip verification for now
         user.setRole(Role.ROLE_USER);
-        user.setUsername(request.getEmail());
+        user.setActive(true); // use this instead of enabled
 
         userRepository.save(user);
 
@@ -52,15 +52,13 @@ public class AuthServiceImpl implements Authservice {
     }
 
         public String verify(String token) {
-            System.out.println("VERIFY API CALLED");
 
             VerificationToken vt = verificationTokenRepository.findByToken(token)
                     .orElseThrow(() -> new RuntimeException("Invalid token"));
 
             User user = vt.getUser();
-            user.setEnabled(true);
+            user.setActive(true);
 
-            user.setId(user.getId());
             userRepository.save(user);
 
             return "Email verified successfully";

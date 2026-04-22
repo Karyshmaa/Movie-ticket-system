@@ -10,5 +10,4 @@ public class LockSeatsRequestDTO {
     private List<Long> seatIds;
     private Long userId;
 
-
 }

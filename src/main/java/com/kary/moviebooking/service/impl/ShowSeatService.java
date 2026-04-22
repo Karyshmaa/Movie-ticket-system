@@ -9,7 +9,9 @@ import com.kary.moviebooking.repository.SeatRepository;
 import com.kary.moviebooking.repository.ShowSeatRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,14 +51,20 @@ public class ShowSeatService {
             for (ShowSeat seat : seats) {
 
                 if (seat.getSeatStatus() == SeatStatus.BOOKED) {
-                    throw new RuntimeException("Seat already booked");
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT,
+                            "Seat already booked"
+                    );
                 }
 
                 if(seat.getSeatStatus() == SeatStatus.LOCKED){
 
                     if(seat.getLockedAt() != null &&
                     seat.getLockedAt().plusMinutes(5).isAfter(LocalDateTime.now())){ //has 5 mins not passed yet
-                        throw new RuntimeException("Seat is currently locked by another user");
+                        throw new ResponseStatusException(
+                                HttpStatus.CONFLICT,
+                                "Seat is currently locked by another user"
+                        );
                     }
                 }
                 // lock seat

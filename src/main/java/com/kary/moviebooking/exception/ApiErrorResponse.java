@@ -1,7 +1,10 @@
 package com.kary.moviebooking.exception;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class ApiErrorResponse {
     private LocalDateTime timestamp;
     private int status;
@@ -16,11 +19,4 @@ public class ApiErrorResponse {
         this.message = message;
         this.path = path;
     }
-
-    // getters & setters
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public int getStatus() { return status; }
-    public String getError() { return error; }
-    public String getMessage() { return message; }
-    public String getPath() { return path; }
 }

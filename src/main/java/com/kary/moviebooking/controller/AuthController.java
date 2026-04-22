@@ -46,16 +46,16 @@ public class AuthController {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
+                        user.getEmail(),
                         user.getPassword()
                 )
         );
 
         Role role = userRepository
-                .findByUsername(user.getUsername())
-                .get()
+                .findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"))
                 .getRole();
 
-        return jwtUtil.generateToken(user.getUsername(), role.name());
+        return jwtUtil.generateToken(user.getEmail(), role.name());
     }
 }
