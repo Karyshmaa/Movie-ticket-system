@@ -14,7 +14,7 @@ public class ShowServiceImpl implements ShowService {
     private ShowRepository showRepository;
 
     @Autowired
-    private ShowSeatService showSeatService;
+    private ShowSeatServiceImpl showSeatServiceImpl;
 
     @Override
     public ShowResponseDTO createShow(Show show) {
@@ -23,7 +23,7 @@ public class ShowServiceImpl implements ShowService {
 
         Show savedShow = showRepository.save(show);
 
-        showSeatService.createShowSeats(savedShow);
+        showSeatServiceImpl.createShowSeats(savedShow);
 
         return mapToDTO(savedShow);
     }

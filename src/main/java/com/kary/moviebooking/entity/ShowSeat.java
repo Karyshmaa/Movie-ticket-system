@@ -3,11 +3,17 @@ package com.kary.moviebooking.entity;
 import com.kary.moviebooking.enums.SeatStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
+@Table(name="show_seats")
 public class ShowSeat {
 
         @Id
@@ -15,9 +21,11 @@ public class ShowSeat {
         private Long id;
 
         @ManyToOne
+        @JoinColumn(name = "show_id")
         private Show show;
 
         @ManyToOne
+        @JoinColumn(name = "seat_id")
         private Seat seat;
 
         @Enumerated(EnumType.STRING)

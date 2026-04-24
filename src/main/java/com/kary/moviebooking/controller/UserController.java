@@ -1,52 +1,40 @@
 package com.kary.moviebooking.controller;
 
-import com.kary.moviebooking.entity.User;
-import com.kary.moviebooking.exception.ResourceNotFoundException;
-import com.kary.moviebooking.repository.UserRepository;
+import com.kary.moviebooking.dto.UserRequestDTO;
+import com.kary.moviebooking.dto.UserResponseDTO;
+import com.kary.moviebooking.service.Interface.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> createUser(
+            @RequestBody @Valid UserRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.createUser(request));
     }
 
-    //Create user
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        user.setCreatedAt(LocalDateTime.now());
-        return userRepository.save(user);
-    }
-
-    //Get user by id
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    //Get all users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @GetMapping("/test-user")
-    public String testUser() {
-        User user = new User();
-        user.setName("Kary");
-        user.setEmail("kary@test.com");
-        user.setPassword("12345");
-
-        userRepository.save(user);
-
-        return "User saved!";
+    @PreAuthorize("hasRole('ADMIN')")  // ✅ only admin can list all users
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }

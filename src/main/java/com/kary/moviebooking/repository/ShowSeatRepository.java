@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
@@ -20,13 +19,12 @@ public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
     List<ShowSeat> findWithLock(@Param("showId") Long showId,
                                 @Param("seatIds") List<Long> seatIds);
 
-    @Query("SELECT ss FROM ShowSeat ss WHERE ss.seatStatus = 'LOCKED' AND ss.lockedAt < :expiryTime")
+    @Query("SELECT ss FROM ShowSeat ss WHERE ss.seatStatus = 'TEMP_LOCKED' AND ss.lockedAt < :expiryTime")
     List<ShowSeat> findExpiredLocks(@Param("expiryTime") LocalDateTime expiryTime);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE) //This ensures:No other user can modify those seats during booking Prevents race conditions
-    @Query("SELECT ss FROM ShowSeat ss WHERE ss.show.id = :showId AND ss.lockedByUserId = :userId AND ss.seatStatus = 'LOCKED'")
+    @Query("SELECT ss FROM ShowSeat ss WHERE ss.show.id = :showId AND ss.lockedByUserId = :userId AND ss.seatStatus = 'TEMP_LOCKED'")
     List<ShowSeat> findLockedSeatsByUser(
             @Param("showId") Long showId,
-            @Param("userId") Long userId
-    );
+            @Param("userId") Long userId);
 }

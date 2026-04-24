@@ -1,12 +1,15 @@
 package com.kary.moviebooking.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.kary.moviebooking.enums.SeatStatus;
 import com.kary.moviebooking.enums.SeatType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "seats",
       uniqueConstraints = @UniqueConstraint(
@@ -32,37 +35,4 @@ public class Seat {
     @JoinColumn(name = "screen_id", nullable = false)
     @JsonIgnore
     private Screen screen;
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getRowNumber() {
-        return rowNumber;
-    }
-    public void setRowNumber(String rowNumber) {
-        this.rowNumber = rowNumber;
-    }
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-    public SeatType getSeatType() {
-        return seatType;
-    }
-    public void setSeatType(SeatType seatType) {
-        this.seatType = seatType;
-    }
-    public Screen getScreen() {
-        return screen;
-    }
-    public void setScreen(Screen screen) {
-        this.screen = screen;
-    }
-
-
 }

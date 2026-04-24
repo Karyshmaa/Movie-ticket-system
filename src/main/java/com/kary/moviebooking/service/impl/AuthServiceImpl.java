@@ -43,7 +43,7 @@ public class AuthServiceImpl implements Authservice {
         user.setName(request.getName()); // make sure DTO has this
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.ROLE_USER);
+        user.setRole(Role.USER);
         user.setActive(true); // use this instead of enabled
 
         userRepository.save(user);
