@@ -8,57 +8,49 @@ import com.kary.moviebooking.entity.User;
 import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.service.Impl.BookingServiceImpl;
 import com.kary.moviebooking.service.Interface.BookingService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("/api/bookings")
+@RequiredArgsConstructor
+@Validated
 public class BookingController {
 
     private final BookingService bookingService;
 
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
+    @PostMapping("/initiate")
+    public ResponseEntity<BookingResponseDTO> initiateBooking(
+            @RequestBody @Valid BookingRequestDTO request,
+            @AuthenticationPrincipal UserDetails userDetails) {  // ✅ userId from JWT, not body
 
-    // Create a new booking
-    @PostMapping
-    public BookingResponseDTO bookSeats(@Valid @RequestBody BookingRequestDTO request) {
-
-        Booking booking = bookingService.createBooking(
-                request.getUserId(),
-                request.getShowId()
+        BookingResponseDTO response = bookingService.initiateBooking(
+                request,
+                userDetails.getUsername()
         );
-
-        // convert to response DTO
-        BookingResponseDTO response = new BookingResponseDTO();
-        response.setBookingId(booking.getId());
-        response.setShowId(booking.getShow().getId());
-        response.setUserId(booking.getUser().getId());
-        response.setBookedAt(booking.getBookedAt());
-
-        return response;
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // Get booking by ID
     @GetMapping("/{id}")
-    public Booking getBookingById(@PathVariable Long id) {
-        return bookingService.getBookingById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + id));
+    public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable Long id) {
+        return ResponseEntity.ok(bookingService.getBookingById(id));  // ✅ returns DTO
     }
 
-    // Get all bookings
     @GetMapping
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
+    public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
+        return ResponseEntity.ok(bookingService.getAllBookings());     // ✅ returns DTOs
     }
 
-
-    // Delete a booking
     @DeleteMapping("/{id}")
-    public String deleteBooking(@PathVariable Long id) {
+    public ResponseEntity<String> deleteBooking(@PathVariable Long id) {
         bookingService.deleteBooking(id);
-        return "Booking deleted successfully!";
+        return ResponseEntity.ok("Booking cancelled successfully");
     }
 }

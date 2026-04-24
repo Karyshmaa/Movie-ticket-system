@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 public class BookingRequestDTO {
 
-    @NotNull
+    @NotNull(message = "Show ID is required")
     private Long showId;
 
-    @NotNull
-    private Long userId;
+    @NotEmpty(message = "Select at least one seat")
+    private List<Long> seatIds;
 }
 

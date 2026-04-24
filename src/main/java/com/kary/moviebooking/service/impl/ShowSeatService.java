@@ -57,7 +57,7 @@ public class ShowSeatService {
                     );
                 }
 
-                if(seat.getSeatStatus() == SeatStatus.LOCKED){
+                if(seat.getSeatStatus() == SeatStatus.TEMP_LOCKED){
 
                     if(seat.getLockedAt() != null &&
                     seat.getLockedAt().plusMinutes(5).isAfter(LocalDateTime.now())){ //has 5 mins not passed yet
@@ -68,7 +68,7 @@ public class ShowSeatService {
                     }
                 }
                 // lock seat
-                seat.setSeatStatus(SeatStatus.LOCKED);
+                seat.setSeatStatus(SeatStatus.TEMP_LOCKED);
                 seat.setLockedByUserId(request.getUserId());
                 seat.setLockedAt(LocalDateTime.now());
             }

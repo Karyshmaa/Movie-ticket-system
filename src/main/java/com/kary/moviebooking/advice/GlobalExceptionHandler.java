@@ -1,5 +1,6 @@
 package com.kary.moviebooking.advice;
 
+import com.kary.moviebooking.exception.SeatNotAvailableException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.kary.moviebooking.exception.ApiErrorResponse;
@@ -16,33 +17,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         ApiErrorResponse error = new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
+                HttpStatus.NOT_FOUND.value(),"Not Found",
+                ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException ex, HttpServletRequest request) {
         ApiErrorResponse error = new ApiErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
+                HttpStatus.BAD_REQUEST.value(),"Bad Request",
+                ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SeatNotAvailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleSeatNotAvailable(SeatNotAvailableException ex, HttpServletRequest request) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(), "Seat Not Available",
+                ex.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneral(Exception ex, HttpServletRequest request) {
         ApiErrorResponse error = new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),"Internal Server Error",
+                ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -1,18 +1,17 @@
 package com.kary.moviebooking.service.Interface;
 
-import com.kary.moviebooking.entity.Booking;
-import com.kary.moviebooking.entity.User;
+import com.kary.moviebooking.dto.BookingRequestDTO;
+import com.kary.moviebooking.dto.BookingResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookingService {
 
-    Booking createBooking(Long userId, Long showId);
+    BookingResponseDTO initiateBooking(BookingRequestDTO request, String username);
 
-    Optional<Booking> getBookingById(Long id);
+    BookingResponseDTO getBookingById(Long id);
 
-    List<Booking> getAllBookings();
+    List<BookingResponseDTO> getAllBookings();
 
     void deleteBooking(Long id);
 }

@@ -1,5 +1,6 @@
 package com.kary.moviebooking.entity;
 
+import com.kary.moviebooking.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,10 +17,17 @@ public class Booking {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "show_id")
     private Show show;
+
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;          // ✅ PENDING → CONFIRMED → CANCELLED
+
+    private Double totalAmount;
 
     private LocalDateTime bookedAt;
 
