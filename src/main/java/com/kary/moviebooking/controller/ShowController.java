@@ -12,82 +12,47 @@ import com.kary.moviebooking.repository.MovieRepository;
 import com.kary.moviebooking.repository.TheaterRepository;
 import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.service.Interface.ShowService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/shows")
+@RequestMapping("/api/shows")
+@RequiredArgsConstructor
 public class ShowController {
 
-    private final ShowService showService;
-    private final ShowRepository showRepository;
-    private final ScreenRepository screenRepository;
-    private final MovieRepository movieRepository;
-    private final TheaterRepository theaterRepository;
+    private final ShowService showService;   // ✅ only service, no repositories
 
-    public ShowController(ShowService showService,ShowRepository showRepository,ScreenRepository screenRepository,MovieRepository movieRepository, TheaterRepository theaterRepository) {
-        this.showService = showService;
-        this.showRepository = showRepository;
-        this.screenRepository = screenRepository;
-        this.movieRepository = movieRepository;
-        this.theaterRepository = theaterRepository;
-    }
-
-    // Create a new show
     @PostMapping
-    public ShowResponseDTO createShow(@RequestBody ShowRequestDTO requestDTO) {
-
-        // Get Movie
-        Movie movie = movieRepository.findById(requestDTO.getMovieId())
-                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + requestDTO.getMovieId()));
-
-        // Get Theater
-        Theater theater = theaterRepository.findById(requestDTO.getTheaterId())
-                .orElseThrow(() -> new ResourceNotFoundException("Theater not found with id " + requestDTO.getTheaterId()));
-
-        // Get Screen
-        Screen screen = screenRepository.findById(requestDTO.getScreenId())
-                .orElseThrow(() -> new ResourceNotFoundException("Screen not found with id " + requestDTO.getScreenId()));
-
-        // Create new Show
-        Show show = new Show();
-        show.setMovie(movie);
-        show.setTheater(theater);
-        show.setScreen(screen);
-        show.setShowTime(requestDTO.getShowTime());
-
-        return showService.createShow(show);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ShowResponseDTO> createShow(
+            @RequestBody @Valid ShowRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(showService.createShow(request));
     }
 
-    // Get show by ID
     @GetMapping("/{id}")
-    public ShowResponseDTO getShowById(@PathVariable Long id) {
-        Show show = showRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Show not found with id " + id));
-
-        return showService.getShowById(id);
+    public ResponseEntity<ShowResponseDTO> getShowById(@PathVariable Long id) {
+        return ResponseEntity.ok(showService.getShowById(id));
     }
 
-    // Get all shows
     @GetMapping
-    public List<ShowResponseDTO> getAllShows() {
-        return showService.getAllShows();
+    public ResponseEntity<List<ShowResponseDTO>> getAllShows() {
+        return ResponseEntity.ok(showService.getAllShows());
     }
 
-    // Get shows by Movie ID
     @GetMapping("/movie/{movieId}")
-    public List<Show> getShowsByMovie(@PathVariable Long movieId) {
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
-        return showRepository.findByMovie(movie);
+    public ResponseEntity<List<ShowResponseDTO>> getShowsByMovie(@PathVariable Long movieId) {
+        return ResponseEntity.ok(showService.getShowsByMovieId(movieId));
     }
 
-    // Get shows by Theater ID
     @GetMapping("/theater/{theaterId}")
-    public List<Show> getShowsByTheater(@PathVariable Long theaterId) {
-        Theater theater = theaterRepository.findById(theaterId)
-                .orElseThrow(() -> new ResourceNotFoundException("Theater not found with id " + theaterId));
-        return showRepository.findByTheater(theater);
+    public ResponseEntity<List<ShowResponseDTO>> getShowsByTheater(@PathVariable Long theaterId) {
+        return ResponseEntity.ok(showService.getShowsByTheaterId(theaterId));
     }
 }

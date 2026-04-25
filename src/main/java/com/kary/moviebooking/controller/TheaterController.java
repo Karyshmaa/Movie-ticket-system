@@ -1,50 +1,46 @@
 package com.kary.moviebooking.controller;
 
-import com.kary.moviebooking.entity.Theater;
-import com.kary.moviebooking.exception.ResourceNotFoundException;
-import com.kary.moviebooking.repository.TheaterRepository;
+import com.kary.moviebooking.dto.TheaterRequestDTO;
+import com.kary.moviebooking.dto.TheaterResponseDTO;
+import com.kary.moviebooking.service.Interface.TheaterService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/theaters")
+@RequestMapping("/api/theaters")
+@RequiredArgsConstructor
 public class TheaterController {
-    private final TheaterRepository theaterRepository;
 
-    public TheaterController(TheaterRepository theaterRepository) {
-        this.theaterRepository = theaterRepository;
-    }
+    private final TheaterService theaterService;
 
-    // Create a theater
     @PostMapping
-    public Theater createTheater(@RequestBody Theater theater) {
-        return theaterRepository.save(theater);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TheaterResponseDTO> createTheater(
+            @RequestBody @Valid TheaterRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(theaterService.createTheater(request));
     }
 
-    // Get theater by ID
     @GetMapping("/{id}")
-    public Theater getTheaterById(@PathVariable Long id) {
-        return theaterRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Theater not found with id " + id));
+    public ResponseEntity<TheaterResponseDTO> getTheaterById(@PathVariable Long id) {
+        return ResponseEntity.ok(theaterService.getTheaterById(id));
     }
 
-    // Get all theaters
     @GetMapping
-    public List<Theater> getAllTheaters() {
-        return theaterRepository.findAll();
+    public ResponseEntity<List<TheaterResponseDTO>> getAllTheaters() {
+        return ResponseEntity.ok(theaterService.getAllTheaters());
     }
 
-    // Optional test endpoint
-    @GetMapping("/test-theater")
-    public String testTheater() {
-        Theater theater = new Theater();
-        theater.setName("Galaxy Cinema");
-        theater.setLocation("Downtown");
-
-        theaterRepository.save(theater);
-
-        return "Theater saved!";
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteTheater(@PathVariable Long id) {
+        theaterService.deleteTheater(id);
+        return ResponseEntity.ok("Theater deleted successfully");
     }
-
 }

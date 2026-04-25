@@ -3,7 +3,13 @@ package com.kary.moviebooking.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import com.kary.moviebooking.entity.Theater;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "shows")
 public class Show {
@@ -13,9 +19,11 @@ public class Show {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "screen_id")
     private Screen screen;
 
     @Column(nullable = false)
@@ -24,24 +32,4 @@ public class Show {
     @ManyToOne
     @JoinColumn(name = "theater_id", nullable = false)
     private Theater theater;
-
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Movie getMovie() { return movie; }
-    public void setMovie(Movie movie) { this.movie = movie; }
-
-    public Screen getScreen() { return screen; }
-    public void setScreen(Screen screen) { this.screen = screen; }
-
-    public LocalDateTime getShowTime() { return showTime; }
-    public void setShowTime(LocalDateTime showTime) { this.showTime = showTime; }
-
-    public Theater getTheater() {
-        return theater;
-    }
-    public void setTheater(Theater theater) {
-        this.theater = theater;
-    }
 }

@@ -6,6 +6,7 @@ import com.kary.moviebooking.enums.Role;
 import com.kary.moviebooking.exception.BadRequestException;
 import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.repository.UserRepository;
+import com.kary.moviebooking.service.Interface.EmailService;
 import com.kary.moviebooking.service.Interface.UserService;
 import lombok.RequiredArgsConstructor;
 import com.kary.moviebooking.entity.User;
@@ -20,7 +21,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;  // ✅ encode password before saving
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public UserResponseDTO createUser(UserRequestDTO request) {
@@ -39,6 +41,8 @@ public class UserServiceImpl implements UserService {
 
         // @PrePersist handles createdAt — don't set it manually
         userRepository.save(user);
+
+        emailService.sendWelcomeEmail(user.getEmail(), user.getName());
 
         return toDTO(user);
     }

@@ -1,6 +1,5 @@
 package com.kary.moviebooking.service.Impl;
 
-import com.kary.moviebooking.dto.LockSeatsRequestDTO;
 import com.kary.moviebooking.entity.Seat;
 import com.kary.moviebooking.entity.Show;
 import com.kary.moviebooking.entity.ShowSeat;
@@ -11,10 +10,7 @@ import com.kary.moviebooking.repository.ShowSeatRepository;
 import com.kary.moviebooking.service.Interface.ShowSeatService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,11 +34,11 @@ public class ShowSeatServiceImpl implements ShowSeatService {
             ss.setShow(show);
             ss.setSeat(seat);
             ss.setSeatStatus(SeatStatus.AVAILABLE);
-            ss.setPrice(getDefaultPrice(seat));   // set price per seat type
+            ss.setPrice(getDefaultPrice(seat));
             return ss;
         }).collect(Collectors.toList());
 
-        showSeatRepository.saveAll(showSeats);    // ✅ one DB call, not N calls
+        showSeatRepository.saveAll(showSeats);
     }
 
         @Override
@@ -83,7 +79,7 @@ public class ShowSeatServiceImpl implements ShowSeatService {
         return switch (seat.getSeatType()) {
             case PREMIUM -> 350.0;
             case RECLINER -> 500.0;
-            default -> 250.0;   // REGULAR
+            default -> 250.0;
         };
     }
 }

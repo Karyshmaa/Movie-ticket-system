@@ -1,49 +1,52 @@
 package com.kary.moviebooking.controller;
 
-import com.kary.moviebooking.entity.Screen;
-import com.kary.moviebooking.repository.ScreenRepository;
+import com.kary.moviebooking.dto.ScreenRequestDTO;
+import com.kary.moviebooking.dto.ScreenResponseDTO;
+import com.kary.moviebooking.service.Interface.ScreenService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/screens")
+@RequestMapping("/api/screens")
+@RequiredArgsConstructor
 public class ScreenController {
-    private final ScreenRepository screenRepository;
 
-    public ScreenController(ScreenRepository screenRepository) {
-        this.screenRepository = screenRepository;
-    }
+    private final ScreenService screenService;
 
-    // Create a new screen
     @PostMapping
-    public Screen createScreen(@RequestBody Screen screen) {
-        return screenRepository.save(screen);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ScreenResponseDTO> createScreen(
+            @RequestBody @Valid ScreenRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(screenService.createScreen(request));
     }
 
-    // Get screen by ID
     @GetMapping("/{id}")
-    public Screen getScreenById(@PathVariable Long id) {
-        return screenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Screen not found with id " + id));
+    public ResponseEntity<ScreenResponseDTO> getScreenById(@PathVariable Long id) {
+        return ResponseEntity.ok(screenService.getScreenById(id));
     }
 
-    // Get all screens
     @GetMapping
-    public List<Screen> getAllScreens() {
-        return screenRepository.findAll();
+    public ResponseEntity<List<ScreenResponseDTO>> getAllScreens() {
+        return ResponseEntity.ok(screenService.getAllScreens());
     }
 
-    // Get all screens by theater ID
     @GetMapping("/theater/{theaterId}")
-    public List<Screen> getScreensByTheaterId(@PathVariable Long theaterId) {
-        return screenRepository.findByTheaterId(theaterId);
+    public ResponseEntity<List<ScreenResponseDTO>> getScreensByTheaterId(
+            @PathVariable Long theaterId) {
+        return ResponseEntity.ok(screenService.getScreensByTheaterId(theaterId));
     }
 
-    // Delete a screen
     @DeleteMapping("/{id}")
-    public String deleteScreen(@PathVariable Long id) {
-        screenRepository.deleteById(id);
-        return "Screen deleted!";
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteScreen(@PathVariable Long id) {
+        screenService.deleteScreen(id);
+        return ResponseEntity.ok("Screen deleted successfully");
     }
 }

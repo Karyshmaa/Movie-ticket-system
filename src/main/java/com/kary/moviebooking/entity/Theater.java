@@ -1,8 +1,15 @@
 package com.kary.moviebooking.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "theaters")
 public class Theater {
@@ -17,43 +24,6 @@ public class Theater {
     @Column(nullable = false)
     private String location;
 
-    @OneToMany(
-            mappedBy = "theater"
-//            cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Screen> screens;
-
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public List<Screen> getScreens() {
-        return screens;
-    }
-
-    public void setScreens(List<Screen> screens) {
-        this.screens = screens;
-    }
 }
