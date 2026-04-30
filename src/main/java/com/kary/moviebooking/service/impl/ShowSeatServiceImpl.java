@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ShowSeatServiceImpl implements ShowSeatService {
 
-    private ShowSeatRepository showSeatRepository;
+    private final ShowSeatRepository showSeatRepository;
     private final SeatRepository seatRepository;
 
     @Override

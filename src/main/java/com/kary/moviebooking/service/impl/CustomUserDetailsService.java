@@ -15,10 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+
+        System.out.println("=== loadUserByUsername called: " + username);
+        System.out.println("userRepository: " + userRepository);  // add temporarily
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
@@ -30,3 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 }
+
+//eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc0Njk4NjMsImV4cCI6MTc3NzQ3MzQ2M30.DVJofE1PW1DVtSbmciqJxJfmvk_5H0CKVLDNXqNBeZ0 admin
+//eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJ5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzc3NDcwNDg0LCJleHAiOjE3Nzc0NzQwODR9.cmbtCDG1KvvgkIUKUKRVbp8BIgKjCmzBadfoKbd_jV8 user

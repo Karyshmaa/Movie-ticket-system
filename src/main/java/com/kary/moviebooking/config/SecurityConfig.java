@@ -2,9 +2,10 @@ package com.kary.moviebooking.config;
 
 import com.kary.moviebooking.security.JwtAuthFilter;
 import com.kary.moviebooking.service.Impl.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,44 +15,43 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/bookings/**","/shows/**","/seats/**").permitAll()
-                        .anyRequest().authenticated()
+           .csrf(csrf -> csrf.disable())
+           .authorizeHttpRequests(auth -> auth
+                // ✅ auth endpoints — anyone can access
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // ✅ register endpoint — anyone can access
+                .requestMatchers("/api/users/register").permitAll()
+
+                // ✅ anyone can view movies and shows
+                .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/theaters/**").permitAll()
+
+                // ✅ everything else needs authentication
+                .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -64,9 +64,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider =
                 new DaoAuthenticationProvider(customUserDetailsService);
-
-        authProvider.setPasswordEncoder(passwordEncoder());
-
+        authProvider.setPasswordEncoder(passwordEncoder );
         return authProvider;
     }
 }
