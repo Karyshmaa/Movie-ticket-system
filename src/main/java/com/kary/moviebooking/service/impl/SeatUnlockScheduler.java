@@ -17,7 +17,7 @@ public class SeatUnlockScheduler {
 
     private final ShowSeatRepository showSeatRepository;
 
-    @Scheduled(fixedRate = 60000)   // every 60 seconds
+    @Scheduled(fixedRate = 300000)   // every 5 mins
     @Transactional
     public void unlockExpiredSeats() {
 

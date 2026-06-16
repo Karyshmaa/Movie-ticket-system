@@ -1,18 +1,17 @@
 package com.kary.moviebooking.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
-    @Table(
-            name = "booking_seats",
-            uniqueConstraints = {
-                    @UniqueConstraint(columnNames = {"show_id", "seat_id"})
-            } //to prevent double booking
-    )
+    @Table(name = "booking_seats")
     public class BookingSeat {
 
         @Id
@@ -20,11 +19,11 @@ import java.time.LocalDateTime;
         private Long id;
 
         //Many seats belong to one booking
-        @ManyToOne(optional = false)
+        @ManyToOne
         @JoinColumn(name = "booking_id")
         private Booking booking;
 
-        @ManyToOne(optional = false)
+        @ManyToOne
         @JoinColumn(name = "show_seat_id")
         private ShowSeat showSeat;
 

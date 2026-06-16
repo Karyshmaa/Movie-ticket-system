@@ -36,15 +36,15 @@ public class AuthServiceImpl implements Authservice {
                            EmailService emailService,
                            PasswordEncoder passwordEncoder,
                            VerificationTokenRepository verificationTokenRepository,
-                           @Lazy AuthenticationManager authenticationManager,  // ✅ @Lazy prevents circular dependency
+                           @Lazy AuthenticationManager authenticationManager,
                            JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
         this.verificationTokenRepository = verificationTokenRepository;
-        this.authenticationManager = authenticationManager;    // ✅
-        this.jwtUtil = jwtUtil;                                // ✅
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -77,10 +77,6 @@ public class AuthServiceImpl implements Authservice {
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO request) {
-        System.out.println("=== LOGIN CALLED ===");
-        System.out.println("userRepository: " + userRepository);
-        System.out.println("authManager: " + authenticationManager);
-        System.out.println("jwtUtil: " + jwtUtil);
 
         // 1. authenticate
         authenticationManager.authenticate(
