@@ -1,4 +1,4 @@
-package com.kary.moviebooking.service.Impl;
+package com.kary.moviebooking.service.impl;
 
 import com.kary.moviebooking.dto.ForgotPasswordRequestDTO;
 import com.kary.moviebooking.dto.ResetPasswordRequestDTO;
@@ -27,8 +27,8 @@ public class PasswordResetServiceImpl implements PasswordResetService{
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
-    // frontend reset page URL — update this when you have a frontend
-    private static final String RESET_URL = "http://localhost:8080/api/auth/reset-password?token=";
+    @org.springframework.beans.factory.annotation.Value("${app.frontend.url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Override
     @Transactional
@@ -60,7 +60,7 @@ public class PasswordResetServiceImpl implements PasswordResetService{
         tokenRepository.save(resetToken);
 
         // 5. Send email
-        String resetLink = RESET_URL + token;
+        String resetLink = frontendUrl + "/reset-password?token=" + token;
         emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), resetLink);
 
         log.info("Password reset token generated for user: {}", user.getEmail());

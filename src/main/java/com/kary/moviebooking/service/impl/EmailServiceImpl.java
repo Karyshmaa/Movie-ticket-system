@@ -1,4 +1,4 @@
-package com.kary.moviebooking.service.Impl;
+package com.kary.moviebooking.service.impl;
 
 import com.kary.moviebooking.service.Interface.EmailService;
 import jakarta.mail.MessagingException;
@@ -17,14 +17,17 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     private final String fromEmail;
     private final String appName;
+    private final String frontendUrl;
 
     public EmailServiceImpl(
             JavaMailSender mailSender,
             @Value("${spring.mail.username}") String fromEmail,
-            @Value("${app.name}") String appName) {
+            @Value("${app.name}") String appName,
+            @Value("${app.frontend.url:http://localhost:5173}") String frontendUrl) {
         this.mailSender = mailSender;
         this.fromEmail = fromEmail;
         this.appName = appName;
+        this.frontendUrl = frontendUrl;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class EmailServiceImpl implements EmailService {
 
                 + "<div style='margin-top: 30px; padding: 15px; background: #e63946;"
                 + "border-radius: 8px; text-align: center;'>"
-                + "<a href='http://localhost:8080' style='color: white;"
+                + "<a href='" + frontendUrl + "' style='color: white;"
                 + "font-size: 16px; text-decoration: none; font-weight: bold;'>"
                 + "Start Booking Now →"
                 + "</a>"

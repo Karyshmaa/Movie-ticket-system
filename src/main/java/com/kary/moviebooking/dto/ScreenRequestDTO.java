@@ -12,4 +12,6 @@ public class ScreenRequestDTO {
 
     @NotNull(message = "Theater ID is required")
     private Long theaterId;
+
+    private Integer totalSeats;  // ✅ added
 }

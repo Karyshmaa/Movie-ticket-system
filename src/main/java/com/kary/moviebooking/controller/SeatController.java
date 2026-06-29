@@ -1,7 +1,6 @@
 package com.kary.moviebooking.controller;
 
-import com.kary.moviebooking.dto.LockSeatsRequestDTO;
-import com.kary.moviebooking.service.Impl.ShowSeatServiceImpl;
+import com.kary.moviebooking.dto.ShowSeatResponseDTO;
 import com.kary.moviebooking.service.Interface.ShowSeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +17,20 @@ public class SeatController {
 
     private final ShowSeatService showSeatService;
 
+    // ✅ public — anyone browsing a show can see which seats are taken
+    @GetMapping("/show/{showId}")
+    public ResponseEntity<List<ShowSeatResponseDTO>> getSeatMapForShow(@PathVariable Long showId) {
+        return ResponseEntity.ok(showSeatService.getSeatMapForShow(showId));
+    }
+
+    // ✅ requires login — temp-locks seats for 5 minutes while the user pays
     @PostMapping("/lock")
     public ResponseEntity<String> lockSeats(
             @RequestParam Long showId,
             @RequestParam List<Long> seatIds,
-            @AuthenticationPrincipal UserDetails userDetails) {  // ✅ userId from JWT
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        // get userId from security context — not from request body
-        // you'll need a method to fetch user by email, similar to BookingService
-        showSeatService.lockSeats(seatIds, showId, null); // pass real userId after fetching
-
+        showSeatService.lockSeatsForUser(seatIds, showId, userDetails.getUsername());
         return ResponseEntity.ok("Seats locked successfully");
     }
 }

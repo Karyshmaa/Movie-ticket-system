@@ -2,15 +2,6 @@ package com.kary.moviebooking.controller;
 
 import com.kary.moviebooking.dto.ShowRequestDTO;
 import com.kary.moviebooking.dto.ShowResponseDTO;
-import com.kary.moviebooking.entity.Screen;
-import com.kary.moviebooking.entity.Show;
-import com.kary.moviebooking.entity.Movie;
-import com.kary.moviebooking.entity.Theater;
-import com.kary.moviebooking.repository.ScreenRepository;
-import com.kary.moviebooking.repository.ShowRepository;
-import com.kary.moviebooking.repository.MovieRepository;
-import com.kary.moviebooking.repository.TheaterRepository;
-import com.kary.moviebooking.exception.ResourceNotFoundException;
 import com.kary.moviebooking.service.Interface.ShowService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +45,12 @@ public class ShowController {
     @GetMapping("/theater/{theaterId}")
     public ResponseEntity<List<ShowResponseDTO>> getShowsByTheater(@PathVariable Long theaterId) {
         return ResponseEntity.ok(showService.getShowsByTheaterId(theaterId));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteShow(@PathVariable Long id) {
+        showService.deleteShow(id);
+        return ResponseEntity.ok("Show deleted successfully");
     }
 }

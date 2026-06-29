@@ -42,6 +42,9 @@ public class Movie {
     @Column(columnDefinition = "text")
     private String about;
 
+    @Column(name = "poster_url")
+    private String posterUrl;
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();  // ✅ auto set, never do this in controller

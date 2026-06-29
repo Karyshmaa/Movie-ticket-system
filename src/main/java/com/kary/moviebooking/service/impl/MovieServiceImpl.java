@@ -1,4 +1,4 @@
-package com.kary.moviebooking.service.Impl;
+package com.kary.moviebooking.service.impl;
 
 import com.kary.moviebooking.dto.MovieRequestDTO;
 import com.kary.moviebooking.dto.MovieResponseDTO;
@@ -29,6 +29,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuration(request.getDuration());
         movie.setRating(request.getRating());
         movie.setAbout(request.getAbout());
+        movie.setPosterUrl(request.getPosterUrl());
         // ✅ no setCreatedAt — @PrePersist handles it
 
         movieRepository.save(movie);
@@ -63,6 +64,9 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuration(request.getDuration());
         movie.setRating(request.getRating());
         movie.setAbout(request.getAbout());
+        if (request.getPosterUrl() != null) {
+            movie.setPosterUrl(request.getPosterUrl());
+        }
 
         movieRepository.save(movie);
         return toDTO(movie);
@@ -87,8 +91,8 @@ public class MovieServiceImpl implements MovieService {
                 .duration(movie.getDuration())
                 .rating(movie.getRating())
                 .about(movie.getAbout())
+                .posterUrl(movie.getPosterUrl())
                 .createdAt(movie.getCreatedAt())
                 .build();
     }
 }
-

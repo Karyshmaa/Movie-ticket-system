@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,15 @@ public class UserController {
                 .body(userService.createUser(request));
     }
 
+    // ✅ logged-in user's own profile, derived from JWT — no id guessing needed
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getCurrentUser(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(userService.getUserByEmail(userDetails.getUsername()));
+    }
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }

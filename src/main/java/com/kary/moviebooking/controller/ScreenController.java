@@ -2,7 +2,10 @@ package com.kary.moviebooking.controller;
 
 import com.kary.moviebooking.dto.ScreenRequestDTO;
 import com.kary.moviebooking.dto.ScreenResponseDTO;
+import com.kary.moviebooking.dto.SeatLayoutRequestDTO;
+import com.kary.moviebooking.dto.SeatResponseDTO;
 import com.kary.moviebooking.service.Interface.ScreenService;
+import com.kary.moviebooking.service.Interface.SeatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import java.util.List;
 public class ScreenController {
 
     private final ScreenService screenService;
+    private final SeatService seatService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -48,5 +52,20 @@ public class ScreenController {
     public ResponseEntity<String> deleteScreen(@PathVariable Long id) {
         screenService.deleteScreen(id);
         return ResponseEntity.ok("Screen deleted successfully");
+    }
+
+    // ✅ admin defines the physical seat layout (rows x seats) for a screen
+    @PostMapping("/{id}/seats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SeatResponseDTO>> createSeatLayout(
+            @PathVariable Long id,
+            @RequestBody @Valid SeatLayoutRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(seatService.createSeatLayout(id, request));
+    }
+
+    @GetMapping("/{id}/seats")
+    public ResponseEntity<List<SeatResponseDTO>> getSeatsForScreen(@PathVariable Long id) {
+        return ResponseEntity.ok(seatService.getSeatsByScreenId(id));
     }
 }

@@ -27,4 +27,6 @@ public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
     List<ShowSeat> findLockedSeatsByUser(
             @Param("showId") Long showId,
             @Param("userId") Long userId);
+
+    List<ShowSeat> findByShow_IdOrderBySeat_RowNumberAscSeat_SeatNumberAsc(Long showId);
 }

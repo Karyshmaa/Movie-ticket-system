@@ -1,4 +1,4 @@
-package com.kary.moviebooking.service.Impl;
+package com.kary.moviebooking.service.impl;
 
 import com.kary.moviebooking.dto.UserRequestDTO;
 import com.kary.moviebooking.dto.UserResponseDTO;
@@ -51,6 +51,13 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+        return toDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return toDTO(user);
     }
 

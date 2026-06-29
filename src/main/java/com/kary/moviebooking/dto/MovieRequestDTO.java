@@ -29,4 +29,6 @@ public class MovieRequestDTO {
     private BigDecimal rating;
 
     private String about;
+
+    private String posterUrl;
 }

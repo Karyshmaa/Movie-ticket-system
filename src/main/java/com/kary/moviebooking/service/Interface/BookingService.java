@@ -11,7 +11,13 @@ public interface BookingService {
 
     BookingResponseDTO getBookingById(Long id);
 
+    BookingResponseDTO getBookingByIdForUser(Long id, String username);
+
+    List<BookingResponseDTO> getBookingsForUser(String username);
+
     List<BookingResponseDTO> getAllBookings();
 
     void deleteBooking(Long id);
+
+    void cancelBookingForUser(Long id, String username);
 }

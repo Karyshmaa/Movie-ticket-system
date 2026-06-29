@@ -1,4 +1,4 @@
-package com.kary.moviebooking.service.Impl;
+package com.kary.moviebooking.service.impl;
 
 import com.kary.moviebooking.dto.ScreenRequestDTO;
 import com.kary.moviebooking.dto.ScreenResponseDTO;
@@ -28,6 +28,7 @@ public class ScreenServiceImpl implements ScreenService {
 
         Screen screen = new Screen();
         screen.setName(request.getName());
+        screen.setTotalSeats(request.getTotalSeats()); // ✅ was missing!
         screen.setTheater(theater);
         screenRepository.save(screen);
         return toDTO(screen);
@@ -42,18 +43,12 @@ public class ScreenServiceImpl implements ScreenService {
 
     @Override
     public List<ScreenResponseDTO> getAllScreens() {
-        return screenRepository.findAll()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return screenRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<ScreenResponseDTO> getScreensByTheaterId(Long theaterId) {
-        return screenRepository.findByTheaterId(theaterId)
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+        return screenRepository.findByTheaterId(theaterId).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -68,6 +63,7 @@ public class ScreenServiceImpl implements ScreenService {
         return ScreenResponseDTO.builder()
                 .id(screen.getId())
                 .name(screen.getName())
+                .totalSeats(screen.getTotalSeats()) // ✅ was missing!
                 .theaterId(screen.getTheater().getId())
                 .theaterName(screen.getTheater().getName())
                 .build();

@@ -19,8 +19,9 @@ public class AuthController {
 
     // calls authservice
     @PostMapping("/signup")
-    public String signup(@RequestBody SignupRequestDTO request) {
-      return authservice.signup(request);
+    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDTO request) {
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+                .body(authservice.signup(request));
     }
 
     //email verification
@@ -52,4 +53,3 @@ public class AuthController {
         return ResponseEntity.ok("Password reset successful. You can now log in");
     }
 }
-

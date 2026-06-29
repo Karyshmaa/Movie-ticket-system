@@ -18,5 +18,6 @@ public class MovieResponseDTO {
     private int duration;
     private BigDecimal rating;
     private String about;
+    private String posterUrl;
     private LocalDateTime createdAt;
 }

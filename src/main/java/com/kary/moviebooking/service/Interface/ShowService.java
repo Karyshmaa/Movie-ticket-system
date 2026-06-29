@@ -11,4 +11,5 @@ public interface ShowService {
     List<ShowResponseDTO> getAllShows();
     List<ShowResponseDTO> getShowsByMovieId(Long movieId);
     List<ShowResponseDTO> getShowsByTheaterId(Long theaterId);
+    void deleteShow(Long id);
 }

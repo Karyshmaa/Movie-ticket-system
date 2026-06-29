@@ -8,6 +8,7 @@ import lombok.Data;
 public class ScreenResponseDTO {
     private Long id;
     private String name;
+    private Integer totalSeats;
     private Long theaterId;
     private String theaterName;
 }

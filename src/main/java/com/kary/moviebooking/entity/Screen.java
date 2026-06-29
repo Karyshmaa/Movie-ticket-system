@@ -23,14 +23,18 @@ public class Screen {
     private Long id;
 
     @Column(nullable = false)
-    private String name;   // Screen 1, Audi 1
+    private String name;
+
+    @Column(name = "total_seats")
+    private Integer totalSeats;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "theater_id")
     @JsonIgnore
     private Theater theater;
 
-    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL)
+    // ✅ cascade ALL — screen delete hone pe seats bhi delete honge
+    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private java.util.List<Seat> seats;
+    private List<Seat> seats;
 }

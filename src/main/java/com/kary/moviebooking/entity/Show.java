@@ -1,11 +1,13 @@
 package com.kary.moviebooking.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import com.kary.moviebooking.entity.Theater;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,4 +34,9 @@ public class Show {
     @ManyToOne
     @JoinColumn(name = "theater_id", nullable = false)
     private Theater theater;
+
+    // ✅ cascade delete — show delete hone pe show_seats bhi delete honge
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ShowSeat> showSeats;
 }
